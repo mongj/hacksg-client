@@ -10,7 +10,7 @@ const data = [
     { year: 2023, ideal: 3490, projected: 4300 },
   ];
 
-function main(Main_Info: Array<number>, Assets: Array<number>, DebtList: Array<Array<number>>, CurrentExpenditure: number, OneOff: Array<number>, RetirementIncome: number, Retirement_Expenditure: Array<number>) {
+function main(Year: number, Main_Info: Array<number>, Assets: Array<number>, DebtList: Array<Array<number>>, CurrentExpenditure: number, OneOff: Array<number>, RetirementIncome: number, Retirement_Expenditure: Array<number>) {
     let FinalAge = 90
     var [InitialAge, IdealAge, Income, IncomeG, Legacy] = [Main_Info[0], Main_Info[1], Main_Info[2], Main_Info[3], Main_Info[4]]
     var LifeSpan: number = FinalAge - InitialAge
@@ -111,6 +111,12 @@ function main(Main_Info: Array<number>, Assets: Array<number>, DebtList: Array<A
         E_Worth += R_Diff
         Projected[y] = E_Worth
     }
+
+    var Ans = []
+    for (let i = 0; i < LifeSpan; i++){
+        Ans.push({year: String(Year+1), ideal: Ideal[i], projected: Projected[i]})
+    }
+    return Ans
 } 
 
 
