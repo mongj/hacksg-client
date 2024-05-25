@@ -4,9 +4,9 @@ import { Link } from "react-router-dom";
 
 function Dashboard() {
   return (
-    <div className="w-full bg-neutral-100 p-8 flex flex-col">
+    <div className="w-full bg-neutral-100 p-8 flex flex-col gap-8">
       <h1 className="text-3xl font-semibold text-neutral-900">Dashboard</h1>
-      <div className="w-full h-full flex place-content-center place-items-center">
+      <div className="w-full h-full flex place-content-center place-items-center rounded-3xl border border-neutral-200 bg-white shadow border-dashed">
         <div className="flex flex-col gap-8 place-content-center place-items-center">
           <img src={profile} alt="profile" className="max-w-96" />
           <h1 className="font-bold text-3xl">
