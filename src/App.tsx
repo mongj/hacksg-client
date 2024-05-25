@@ -1,7 +1,12 @@
+import { Input } from "@/components/ui/input";
+
 function App() {
   return (
-    <div>hack sg thing</div>
-  )
+    <>
+      <div className="text-red-500 text-xl">hack sg thing</div>
+      <Input />
+    </>
+  );
 }
 
-export default App
+export default App;
