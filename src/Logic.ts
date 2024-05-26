@@ -1,15 +1,5 @@
 import { useState } from "react"
 
-const data = [
-    { year: 2017, ideal: 4000, projected: 2400 },
-    { year: 2018, ideal: 3000, projected: 1398 },
-    { year: 2019, ideal: 2000, projected: 9800 },
-    { year: 2020, ideal: 2780, projected: 3908 },
-    { year: 2021, ideal: 1890, projected: 4800 },
-    { year: 2022, ideal: 2390, projected: 3800 },
-    { year: 2023, ideal: 3490, projected: 4300 },
-  ];
-
 function main(Year: number, Main_Info: Array<number>, Assets: Array<number>, DebtList: Array<Array<number>>, CurrentExpenditure: number, OneOff: Array<number>, RetirementIncome: number, Retirement_Expenditure: Array<number>) {
     let FinalAge = 90
     var [InitialAge, IdealAge, Income, IncomeG, Legacy] = [Main_Info[0], Main_Info[1], Main_Info[2], Main_Info[3], Main_Info[4]]
@@ -20,7 +10,7 @@ function main(Year: number, Main_Info: Array<number>, Assets: Array<number>, Deb
         Debt[1] += DebtList[i][1]
         Debt[0] += DebtList[i][0]
     }
-    Debt[1] += Debt[1]/DebtList.length
+    Debt[1] = Debt[1]/DebtList.length
     var NetWorth = Cash + Bonds + Stock - Debt[0]
     var Ideal: Array<number> = []
     var Projected: Array<number> = []
@@ -31,7 +21,7 @@ function main(Year: number, Main_Info: Array<number>, Assets: Array<number>, Deb
     var [Incident, Coninuous, Yearly, Start, End] = [OneOff[0], OneOff[1], OneOff[2], OneOff[3], OneOff[4]]
     //do this later
     var RetirementExpenditure: number = 0
-    for (let temp in Retirement_Expenditure) {RetirementExpenditure += Number(temp)}
+    for (let temp of Retirement_Expenditure) {RetirementExpenditure += temp}
 
     var ISpending = FinalAge - IdealAge
     var IEarning = IdealAge - InitialAge
@@ -44,11 +34,15 @@ function main(Year: number, Main_Info: Array<number>, Assets: Array<number>, Deb
     }
     var linear_earning = (ISum - NetWorth)/IEarning
     var Debt_Payoff_Years = (Debt[0]/linear_earning)
+    if (Debt_Payoff_Years > 0.7*IdealAge){
+        Debt_Payoff_Years = 0.7*IdealAge
+    }
     var Saving_Years = IEarning - Debt_Payoff_Years
     let k = Math.log(ISum - NetWorth)
     var step = k/Saving_Years
     for (let i = 0; i < IEarning; i++){
         if (i < Debt_Payoff_Years){
+            NetWorth += Debt[0]/Debt_Payoff_Years
             Ideal.splice(i, 0, NetWorth)
         }
         else{
@@ -69,7 +63,7 @@ function main(Year: number, Main_Info: Array<number>, Assets: Array<number>, Deb
         Bonds = Bonds*1.02
         Stock = Stock*1.06
         Debt[0] = Debt[0]*Debt[1]
-        NetWorth = Bonds + Stock + Cash + Debt[0]
+        NetWorth = Bonds + Stock + Cash - Debt[0]
     }
     function Save(amount: number){
         if (Cash >= 6*YearlyExpenditure){
@@ -78,13 +72,13 @@ function main(Year: number, Main_Info: Array<number>, Assets: Array<number>, Deb
             Stock += (x/60)*Investment
         }
         else {
-            Cash += Math.min(6*YearlyExpenditure-amount, amount)
-            amount -= Math.min(6*YearlyExpenditure-amount, amount)
-            Save(amount)
+            Cash += Math.min(0.5*YearlyExpenditure-amount, amount)
+            amount -= Math.min(0.5*YearlyExpenditure-amount, amount)
+            if (amount > 0){Save(amount)}
         }
     }
     //Function End
-    var [x, y] = [0, FinalAge]
+    var [x, y] = [0, LifeSpan]
     Projected[x] = NetWorth
     Projected[y] = Legacy
     var E_Worth = Legacy
@@ -119,7 +113,28 @@ function main(Year: number, Main_Info: Array<number>, Assets: Array<number>, Deb
     return Ans
 } 
 
+//test
+const Year = 2024;
+const Main_Info = [50, 65, 100000, 1.05, 200000]; // InitialAge, IdealAge, Income, IncomeG, Legacy
+const Assets = [50000, 200000, 300000]; // Cash, Bonds, Stock
+const DebtList = [[100000, 1.03]]; // Debt amounts with interest rates
+const CurrentExpenditure = 60000; // Current yearly expenditure
+const OneOff = [10000, 5000, 20000, 1, 5]; // One-off expenses: Incident, Continuous, Yearly, Start, End
+const RetirementIncome = 70000; // Expected yearly income during retirement
+const Retirement_Expenditure = [50000, 55000, 60000]; // Expected yearly expenditure during retirement
 
+const result = main(
+    Year,
+    Main_Info,
+    Assets,
+    DebtList,
+    CurrentExpenditure,
+    OneOff,
+    RetirementIncome,
+    Retirement_Expenditure
+);
+
+console.log(result);
 
 
 /*
