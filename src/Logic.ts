@@ -1,52 +1,52 @@
 //import { useState } from "react"
 
 function main(Year: number, Main_Info: Array<number>, Assets: Array<number>, DebtList: Array<Array<number>>, CurrentExpenditure: Array<number>, RetirementIncome: number, Retirement_Expenditure: Array<number> ) {//OneOff: Array<number>
-  let FinalAge = 90
-  var [InitialAge, IdealAge, Income, IncomeG, Legacy] = [Main_Info[0], Main_Info[1], Main_Info[2], Main_Info[3], Main_Info[4]]
-  var LifeSpan: number = FinalAge - InitialAge
-  var [Cash, Bonds, Stock] = [Assets[0], Assets[1], Assets[2]]
-  var Debt: Array<number> = [0, 0] //[Amount, Interest]
+  const FinalAge = 90
+  let [InitialAge, IdealAge, Income, IncomeG, Legacy] = [Main_Info[0], Main_Info[1], Main_Info[2], Main_Info[3], Main_Info[4]]
+  const LifeSpan: number = FinalAge - InitialAge
+  let [Cash, Bonds, Stock] = [Assets[0], Assets[1], Assets[2]]
+  const Debt: Array<number> = [0, 0] //[Amount, Interest]
   for (let i = 0; i < DebtList.length; i++){
       Debt[1] += DebtList[i][1]
       Debt[0] += DebtList[i][0]
   }
   Debt[1] = Debt[1]/DebtList.length
-  var NetWorth = Cash + Bonds + Stock - Debt[0]
-  var Ideal: Array<number> = []
-  var Projected: Array<number> = []
+  let NetWorth = Cash + Bonds + Stock - Debt[0]
+  const Ideal: Array<number> = []
+  const Projected: Array<number> = []
   for (let i = 0; i < FinalAge; i++){Projected.push(0)}
-  var [Monthly_Expenditure, Big_Tickets] = [CurrentExpenditure[0], CurrentExpenditure[1]]
-  var YearlyExpenditure = 12*Monthly_Expenditure + Big_Tickets
+  const [Monthly_Expenditure, Big_Tickets] = [CurrentExpenditure[0], CurrentExpenditure[1]]
+  let YearlyExpenditure = 12*Monthly_Expenditure + Big_Tickets
   
   //var [Incident, Coninuous, Yearly, Start, End] = [OneOff[0], OneOff[1], OneOff[2], OneOff[3], OneOff[4]]
   //do this later
-  var RetirementExpenditure: number = 0
-  for (let temp of Retirement_Expenditure) {RetirementExpenditure += temp}
+  let RetirementExpenditure: number = 0
+  for (const temp of Retirement_Expenditure) {RetirementExpenditure += temp}
 
-  var ISpending = FinalAge - IdealAge
-  var IEarning = IdealAge - InitialAge
-  var ISum = Legacy
+  const ISpending = FinalAge - IdealAge
+  const IEarning = IdealAge - InitialAge
+  let ISum = Legacy
   Ideal.unshift(ISum)
   for (let i = 0; i < ISpending; i++){
-      let temp = (RetirementIncome - RetirementExpenditure)*(1.03)*(1/1.02)
+      const temp = (RetirementIncome - RetirementExpenditure)*(1.03)*(1/1.02)
       ISum += temp
       Ideal.unshift(ISum)
   }
-  var linear_earning = (ISum - NetWorth)/IEarning
-  var Debt_Payoff_Years = (Debt[0]/linear_earning)
+  const linear_earning = (ISum - NetWorth)/IEarning
+  let Debt_Payoff_Years = (Debt[0]/linear_earning)
   if (Debt_Payoff_Years > 0.7*IdealAge){
       Debt_Payoff_Years = 0.7*IdealAge
   }
-  var Saving_Years = IEarning - Debt_Payoff_Years
-  let k = Math.log(ISum - NetWorth)
-  var step = k/Saving_Years
+  const Saving_Years = IEarning - Debt_Payoff_Years
+  const k = Math.log(ISum - NetWorth)
+  const step = k/Saving_Years
   for (let i = 0; i < IEarning; i++){
       if (i < Debt_Payoff_Years){
           NetWorth += Debt[0]/Debt_Payoff_Years
           Ideal.splice(i, 0, NetWorth)
       }
       else{
-          let value = Math.pow(Math.E, (i-Debt_Payoff_Years)*step)
+          const value = Math.pow(Math.E, (i-Debt_Payoff_Years)*step)
           NetWorth += value
           Ideal.splice(i, 0, NetWorth)
       }
@@ -67,7 +67,7 @@ function main(Year: number, Main_Info: Array<number>, Assets: Array<number>, Deb
   }
   function Save(amount: number){
       if (Cash >= 6*YearlyExpenditure){
-          let Investment = Stock + Bonds + amount
+          const Investment = Stock + Bonds + amount
           Bonds += (1-(x/60))*Investment
           Stock += (x/60)*Investment
       }
@@ -81,8 +81,8 @@ function main(Year: number, Main_Info: Array<number>, Assets: Array<number>, Deb
   var [x, y] = [0, LifeSpan]
   Projected[x] = NetWorth
   Projected[y] = Legacy
-  var E_Worth = Legacy
-  var Y_Worth = NetWorth
+  let E_Worth = Legacy
+  const Y_Worth = NetWorth
   while (y >= x){
       while (E_Worth>Y_Worth){
           x += 1
@@ -101,12 +101,12 @@ function main(Year: number, Main_Info: Array<number>, Assets: Array<number>, Deb
       }
       //j
       y -= 1
-      var R_Diff = (RetirementIncome - RetirementExpenditure)*(1.03)*(1/1.02)
+      const R_Diff = (RetirementIncome - RetirementExpenditure)*(1.03)*(1/1.02)
       E_Worth += R_Diff
       Projected[y] = E_Worth
   }
 
-  var Ans = []
+  const Ans = []
   for (let i = 0; i < LifeSpan; i++){
       Ans.push({year: String(Year+1), ideal: Ideal[i], projected: Projected[i]})
   }
