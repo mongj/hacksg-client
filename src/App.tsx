@@ -7,7 +7,6 @@ function App() {
   return (
     <NavbarAndSidebar>
       <Routes>
-        {/* Single catch-all route because we only have one page now */}
         <Route path="/" element={<Home />} />
         <Route path="/profile" element={<Profile />} />
       </Routes>
