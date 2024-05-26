@@ -1,6 +1,6 @@
-import { useState } from "react"
+//import { useState } from "react"
 
-function main(Year: number, Main_Info: Array<number>, Assets: Array<number>, DebtList: Array<Array<number>>, CurrentExpenditure: number, OneOff: Array<number>, RetirementIncome: number, Retirement_Expenditure: Array<number>) {
+function main(Year: number, Main_Info: Array<number>, Assets: Array<number>, DebtList: Array<Array<number>>, CurrentExpenditure: Array<number>, RetirementIncome: number, Retirement_Expenditure: Array<number> ) {//OneOff: Array<number>
     let FinalAge = 90
     var [InitialAge, IdealAge, Income, IncomeG, Legacy] = [Main_Info[0], Main_Info[1], Main_Info[2], Main_Info[3], Main_Info[4]]
     var LifeSpan: number = FinalAge - InitialAge
@@ -15,10 +15,10 @@ function main(Year: number, Main_Info: Array<number>, Assets: Array<number>, Deb
     var Ideal: Array<number> = []
     var Projected: Array<number> = []
     for (let i = 0; i < FinalAge; i++){Projected.push(0)}
-    var [Monthly_Expenditure, Big_Tickets] = [Assets[0], Assets[1]]
+    var [Monthly_Expenditure, Big_Tickets] = [CurrentExpenditure[0], CurrentExpenditure[1]]
     var YearlyExpenditure = 12*Monthly_Expenditure + Big_Tickets
     
-    var [Incident, Coninuous, Yearly, Start, End] = [OneOff[0], OneOff[1], OneOff[2], OneOff[3], OneOff[4]]
+    //var [Incident, Coninuous, Yearly, Start, End] = [OneOff[0], OneOff[1], OneOff[2], OneOff[3], OneOff[4]]
     //do this later
     var RetirementExpenditure: number = 0
     for (let temp of Retirement_Expenditure) {RetirementExpenditure += temp}
@@ -118,7 +118,7 @@ const Year = 2024;
 const Main_Info = [50, 65, 100000, 1.05, 200000]; // InitialAge, IdealAge, Income, IncomeG, Legacy
 const Assets = [50000, 200000, 300000]; // Cash, Bonds, Stock
 const DebtList = [[100000, 1.03]]; // Debt amounts with interest rates
-const CurrentExpenditure = 60000; // Current yearly expenditure
+const CurrentExpenditure = [60000, 0]; // Current yearly expenditure
 const OneOff = [10000, 5000, 20000, 1, 5]; // One-off expenses: Incident, Continuous, Yearly, Start, End
 const RetirementIncome = 70000; // Expected yearly income during retirement
 const Retirement_Expenditure = [50000, 55000, 60000]; // Expected yearly expenditure during retirement
@@ -129,7 +129,6 @@ const result = main(
     Assets,
     DebtList,
     CurrentExpenditure,
-    OneOff,
     RetirementIncome,
     Retirement_Expenditure
 );
